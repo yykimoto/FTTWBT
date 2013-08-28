@@ -30,7 +30,8 @@ public class FlyWView implements IJavatterTab, ActionListener {
 	SaveData sv;
 	public TwitterUtil util;
 	private int now = 0;
-	view pane;
+	public view pane;
+	JLabel mess;
 
 	public FlyWView() {
 		util = new TwitterUtil();
@@ -43,17 +44,20 @@ public class FlyWView implements IJavatterTab, ActionListener {
 
 	@Override
 	public Component getComponent() {
-		return new view();
+		view pane = new view();
+		mess = new JLabel();
+		pane.add(mess, BorderLayout.SOUTH);
+		return pane;
 	}
 
 	public void nextNow(int i) {
 		now = i;
-
 	}
 
 	public void message(String s) {
 		try {
 			util.tweet(FlyWPlugin.twi, s);
+			mess.setText(s);
 		} catch (TwitterException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

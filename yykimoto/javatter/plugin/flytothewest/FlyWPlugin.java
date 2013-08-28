@@ -11,11 +11,10 @@ import com.orekyuu.javatter.view.MainWindowView;
 
 public class FlyWPlugin extends JavatterPlugin implements ITweetListener {
 
-	public boolean isFly;
 	public int flyTimes;
 	public int arroundTimes;
 	public int city;
-	public int engine = 10;
+	public int engine;
 	public static City[] cities = { new City("名古屋", 61), new City("津", 74),
 			new City("大津", 43), new City("大阪", 28), new City("神戸", 33),
 			new City("加古川", 57), new City("小豆島", 37), new City("大都会岡山", 107),
@@ -38,15 +37,21 @@ public class FlyWPlugin extends JavatterPlugin implements ITweetListener {
 			new City("成田空港", 31), new City("千葉", 32), new City("東京", 28),
 			new City("横浜", 21), new City("座間", 63), new City("富士山", 53),
 			new City("静岡", 77), new City("浜松", 66), new City("豊田", 25) };
-	FlyWView view = new FlyWView();
+	FlyWView view;
 	public static Twitter twi;
 
 	@Override
 	public void init() {
-		getSaveData().setDefaultValue("isfly", true);
 		getSaveData().setDefaultValue("flytimes", 0);
-		getSaveData().setDefaultValue("engine", 0);
+		getSaveData().setDefaultValue("arroundtimes", 0);
+		getSaveData().setDefaultValue("city", 0);
+		getSaveData().setDefaultValue("engine", 10);
 		getSaveData().setDefaultValue("paris", 41);
+
+		flyTimes = getSaveData().getInt("flytimes");
+		arroundTimes = getSaveData().getInt("arroundtimes");
+		city = getSaveData().getInt("city");
+		engine = getSaveData().getInt("engine");
 
 		twi = twitter;
 		addTweetListener(this);
@@ -66,7 +71,7 @@ public class FlyWPlugin extends JavatterPlugin implements ITweetListener {
 
 	@Override
 	protected IJavatterTab getPluginConfigViewObserver() {
-		return new FlyWView();
+		return view = new FlyWView();
 	}
 
 	public void incFlyTimes() {
@@ -81,34 +86,32 @@ public class FlyWPlugin extends JavatterPlugin implements ITweetListener {
 						+ "回目の世界一周です。よっしゃよっしゃ #FlyWest");
 				break;
 			case 18:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
 				view.message("エンジンを国内用から遠距離用1に切り替えました");
 				engine = 40;
 			case 24:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
 				view.message("エンジンを遠距離用1から遠距離用2に切り替えました");
 				engine = 100;
 			case 34:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
 				view.message("エンジンを国内用から遠距離用1に切り替えました");
 				engine = 40;
 			case 40:
-				view.message("パリに到着しました。よっしゃよっしゃ。 ですが我々の旅はこれだけではありません。 さらに西へ向かい、名古屋を目指すのです #FlyWest");
+				view.message("パリに到着しました。よっしゃよっしゃ。 "
+						+ (arroundTimes == 0 ? "ですが我々の旅はこれだけではありません。 さらに西へ向かい、名古屋を目指すのです"
+								: "") + " #FlyWest");
+				view.pane.paris = cities.length;
+				view.pane.reload();
 			case 48:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
 				view.message("エンジンを遠距離用2から国内用に切り替えました");
 
 			case 31:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
-				view.message((arroundTimes + 1) + "回目の千葉滋賀佐賀達成しました");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message((arroundTimes + 1) + "回目の千葉滋賀佐賀達成しました #FlyWest");
 			default:
-				view.message(cities[city].name
-						+ "に到着しました。よっしゃよっしゃ #FlyWest");
+				view.message(cities[city].name + "に到着しました。よっしゃよっしゃ #FlyWest");
 			}
 		}
 	}
